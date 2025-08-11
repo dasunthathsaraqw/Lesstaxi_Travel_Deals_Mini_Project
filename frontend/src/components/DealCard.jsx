@@ -1,44 +1,98 @@
-import React from 'react';
+// frontend/src/components/DealCard.js
+import React, { useState, useEffect } from 'react';
 
 const DealCard = ({ deal }) => {
+  const initialTimer = deal.timer || '00:00:00';
+  const [timer, setTimer] = useState(() => {
+    const storedTimer = localStorage.getItem(`timer_${deal._id}`);
+    return storedTimer || initialTimer;
+  });
+
+  useEffect(() => {
+    const [hours, minutes, seconds] = timer.split(':').map(Number);
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+
+    if (totalSeconds <= 0) return;
+
+    const interval = setInterval(() => {
+      totalSeconds -= 1;
+      if (totalSeconds <= 0) {
+        setTimer('00:00:00');
+        localStorage.setItem(`timer_${deal._id}`, '00:00:00');
+        clearInterval(interval);
+        return;
+      }
+
+      const newHours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+      const newMinutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+      const newSeconds = (totalSeconds % 60).toString().padStart(2, '0');
+      const newTimer = `${newHours}:${newMinutes}:${newSeconds}`;
+
+      setTimer(newTimer);
+      localStorage.setItem(`timer_${deal._id}`, newTimer);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [deal._id, timer]);
+
   return (
-    <div className="border rounded-lg p-4 shadow-md hover:shadow-lg transition bg-white">
-      <img src={deal.image} alt={deal.title} className="w-full h-48 object-cover rounded-t-lg mb-2" />
-      <h3 className="text-sm text-blue-600 font-semibold">{deal.category}</h3>
-      <h2 className="text-lg font-bold mb-2">{deal.title}</h2>
-      <ul className="text-gray-600 mb-3 list-disc pl-5">
-        {deal.description.split(',').map((item, index) => (
-          <li key={index}>{item.trim()}</li>
-        ))}
-      </ul>
-      <div className="flex justify-between items-center mb-2">
-        <div>
-          <span className="text-gray-500 line-through">LKR {deal.price.toLocaleString()}</span>
-          <span className="text-red-600 font-semibold ml-2">LKR {deal.discountedPrice.toLocaleString()}</span>
+    <div className="border rounded-lg shadow-md bg-white mb-6 overflow-hidden flex flex-col md:flex-row h-96"> {/* Fixed height for card */}
+      <div className="md:w-1/3 h-48 md:h-full relative"> {/* Fixed image height */}
+        <img src={deal.image} alt={deal.title} className="w-full h-full object-cover" />
+        <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+          {deal.category}
         </div>
-        <span className="text-sm text-gray-500">{deal.location}</span>
-      </div>
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-600">{deal.purchasedCount} purchased</span>
-      </div>
-      <div className="flex justify-center space-x-2 mb-2">
-        {deal.timer.split(':').map((part, index) => (
-          <div key={index} className="bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold">
-            {part}
+        {deal.tags && deal.tags.length > 0 && (
+          <div className="absolute bottom-2 left-2 bg-white text-black text-xs font-semibold px-2 py-1 rounded flex items-center space-x-1">
+            <span>{deal.tags[0]}</span>
+            {deal.tags.length > 1 && (
+              <span className="bg-yellow-400 text-black px-1 rounded">+{deal.tags.length - 1}</span>
+            )}
           </div>
-        ))}
-        <div className="flex space-x-4 text-xs text-gray-500 absolute bottom-0 right-0 pr-4 pb-2">
-          <span>Hours</span>
-          <span>Minutes</span>
-          <span>Seconds</span>
+        )}
+      </div>
+      <div className="p-4 md:w-2/3 flex flex-col justify-between">
+        <div>
+          <h2 className="text-lg font-bold">{deal.title}</h2>
+          <p className="text-sm text-gray-500">{deal.location} · {deal.reviewsCount} Reviews</p>
+          <ul className="text-gray-600 text-sm mt-2">
+            {deal.description.split(',').map((item, index) => (
+              <li key={index} className="flex items-center">
+                <span className="text-green-500 mr-1">✓</span>
+                {item.trim()}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="flex flex-col">
+            <span className="text-gray-500 line-through text-sm">LKR {deal.price.toLocaleString()}</span>
+            <span className="text-red-600 font-bold text-xl">LKR {deal.discountedPrice.toLocaleString()}</span>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">Already purchased: {deal.purchasedCount}</p>
+          <div className="flex justify-start space-x-2 mt-2">
+            {timer.split(':').map((part, index) => (
+              <div key={index} className="bg-gray-200 text-gray-800 px-3 py-1 rounded font-bold text-lg">
+                {part}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-start space-x-4 text-xs text-gray-500 mt-1">
+            <span>Hours</span>
+            <span>Minutes</span>
+            <span>Seconds</span>
+          </div>
+          <div className="flex items-center mt-2">
+            <span className="text-yellow-500">★ {deal.rating}</span>
+          </div>
+          <div className="flex space-x-2 mt-4">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded text-sm flex-1 hover:bg-blue-600 transition">View Details</button>
+            <button className="bg-yellow-500 text-white px-4 py-2 rounded text-sm flex-1 hover:bg-yellow-600 transition">Book Now</button>
+          </div>
+          <div className="flex space-x-2 mt-2 text-gray-500 text-xs">
+          </div>
         </div>
       </div>
-      <div className="flex items-center mb-2">
-        <span className="text-yellow-500">★ {deal.rating}</span>
-        <span className="text-sm text-gray-500 ml-2">({deal.reviewsCount} reviews)</span>
-      </div>
-      <div className="text-sm text-gray-500">Tags: {deal.tags.join(', ')}</div>
-      <button className="bg-yellow-500 text-white px-4 py-2 rounded mt-2 w-full">Book Now</button>
     </div>
   );
 };
