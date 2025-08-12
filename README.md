@@ -12,8 +12,8 @@ git clone https://github.com/dasunthathsaraqw/Lesstaxi_Travel_Deals_Mini_Project
 1. Run the Backend:
 
 Navigate to the backend folder:cd Lesstaxi_Travel_Deals_Mini_Project/backend
-Install dependencies:npm install
-Start the backend:"npm start"
+Install dependencies: "npm install"  
+Start the backend: "npm start"
 
 The server runs on http://localhost:5000. You should see:Server running on http://localhost:5000
 MongoDB connected
@@ -23,8 +23,8 @@ MongoDB connected
 2. Run the Frontend:
 
 Open a new terminal and navigate to the frontend folder:cd Lesstaxi_Travel_Deals_Mini_Project/frontend
-Install dependencies:npm install
-Start the frontend:"npm run dev"
+Install dependencies: "npm install"  
+Start the frontend: "npm run dev"
 
 Open http://localhost:5173 in a browser to view the app.
 
