@@ -43,3 +43,6 @@ Notes
 
 Ensure the .env file in backend/ has valid MongoDB Atlas and Cloudinary credentials.
 Postman screenshots demonstrate how to test the CREATE endpoint for deals.
+
+UI SCREENSHOT
+[text](README.md) ![text](<UI screenshot/Screenshot (749).png>) ![text](<UI screenshot/Screenshot (750).png>) ![text](<UI screenshot/Screenshot (751).png>) ![text](<UI screenshot/Screenshot (752).png>) ![text](<UI screenshot/Screenshot (756).png>)
