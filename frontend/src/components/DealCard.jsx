@@ -1,4 +1,3 @@
-// frontend/src/pages/DealCard.js
 import React, { useState, useEffect } from 'react';
 
 const DealCard = ({ deal }) => {

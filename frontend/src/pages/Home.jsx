@@ -56,16 +56,16 @@ const Home = () => {
     // Sort deals
     switch (sortBy) {
       case 'price-low':
-        filtered.sort((a, b) => a.discountedPrice - b.discountedPrice);
+        filtered = [...filtered].sort((a, b) => a.discountedPrice - b.discountedPrice);
         break;
       case 'price-high':
-        filtered.sort((a, b) => b.discountedPrice - a.discountedPrice);
+        filtered = [...filtered].sort((a, b) => b.discountedPrice - a.discountedPrice);
         break;
       case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
+        filtered = [...filtered].sort((a, b) => b.rating - a.rating);
         break;
       case 'popular':
-        filtered.sort((a, b) => b.purchasedCount - a.purchasedCount);
+        filtered = [...filtered].sort((a, b) => b.purchasedCount - a.purchasedCount);
         break;
       default:
         // Keep original order for 'featured'
@@ -230,13 +230,7 @@ const Home = () => {
               {/* Clear All Button */}
               {(searchTerm || selectedCategory || sortBy !== 'featured') && (
                 <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedCategory('');
-                    setSortBy('featured');
-                    setShowCategoryFilter(false);
-                    setShowSortFilter(false);
-                  }}
+                  onClick={resetFilters}
                   className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors border border-gray-200 rounded-lg hover:border-gray-300"
                 >
                   Clear
@@ -352,3 +346,4 @@ const Home = () => {
 };
 
 export default Home;
+
